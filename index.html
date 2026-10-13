@@ -32,15 +32,10 @@
       box-shadow: 0 10px 40px rgba(80, 50, 160, 0.15);
     }
     h1 {
-      margin: 0 0 8px;
+      margin: 0 0 28px;
       font-size: 2rem;
       color: var(--primary);
       text-align: center;
-    }
-    .subtitulo {
-      text-align: center;
-      color: var(--muted);
-      margin-bottom: 28px;
     }
     fieldset {
       border: 1px solid var(--border);
@@ -79,6 +74,17 @@
     .dados input:focus {
       outline: 2px solid var(--primary);
       border-color: transparent;
+    }
+    .dados input.invalido {
+      border-color: #c0392b;
+      background: #fff6f5;
+    }
+    .erro-campo {
+      display: block;
+      color: #c0392b;
+      font-size: 0.85rem;
+      margin-top: 4px;
+      min-height: 1.1em;
     }
 
     /* Consentimento de baixa visibilidade (dark pattern simulado) */
@@ -143,7 +149,6 @@
 <body>
   <main class="container">
     <h1>Descubra o seu Perfil Psicológico</h1>
-    <p class="subtitulo">Responda a 5 perguntas rápidas e conheça o seu perfil dominante.</p>
 
     <form id="teste" novalidate>
 
@@ -154,7 +159,9 @@
         <input type="text" id="nome" name="nome" placeholder="O seu nome" required>
 
         <label for="email">E-mail</label>
-        <input type="email" id="email" name="email" placeholder="exemplo@email.com" required>
+        <input type="email" id="email" name="email" placeholder="exemplo@email.com"
+               autocomplete="email" inputmode="email" maxlength="254" required>
+        <span class="erro-campo" id="erro-email"></span>
 
         <label for="nascimento">Data de nascimento</label>
         <input type="date" id="nascimento" name="nascimento" required>
@@ -250,21 +257,55 @@
       }
     };
 
+    // Formato válido: texto@dominio.extensao (extensão com pelo menos 2 letras)
+    const regexEmail = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}$/;
+
+    function emailValido(valor) {
+      return regexEmail.test(valor) && !valor.includes("..") && !valor.startsWith(".");
+    }
+
+    const campoEmail = document.getElementById("email");
+    const erroEmail = document.getElementById("erro-email");
+
+    function validarEmail() {
+      const valor = campoEmail.value.trim();
+      if (valor === "") {
+        campoEmail.classList.remove("invalido");
+        erroEmail.textContent = "";
+        return false;
+      }
+      if (!emailValido(valor)) {
+        campoEmail.classList.add("invalido");
+        erroEmail.textContent = "Formato inválido. Use o formato nome@dominio.com";
+        return false;
+      }
+      campoEmail.classList.remove("invalido");
+      erroEmail.textContent = "";
+      return true;
+    }
+
+    campoEmail.addEventListener("blur", validarEmail);
+    campoEmail.addEventListener("input", function () {
+      if (campoEmail.classList.contains("invalido")) validarEmail();
+    });
+
     document.getElementById("teste").addEventListener("submit", function (e) {
       e.preventDefault();
       const erro = document.getElementById("erro");
       erro.textContent = "";
 
       const nome = document.getElementById("nome").value.trim();
-      const email = document.getElementById("email").value.trim();
+      const email = campoEmail.value.trim();
       const nascimento = document.getElementById("nascimento").value;
 
       if (!nome || !email || !nascimento) {
         erro.textContent = "Por favor, preencha o nome, o e-mail e a data de nascimento.";
+        if (email) validarEmail();
         return;
       }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        erro.textContent = "Introduza um endereço de e-mail válido.";
+      if (!validarEmail()) {
+        erro.textContent = "Introduza um endereço de e-mail válido para continuar.";
+        campoEmail.focus();
         return;
       }
 
