@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Descubra o seu Perfil Psicológico</title>
+  <style>
+    :root {
+      --bg: #f4f1fb;
+      --card: #ffffff;
+      --primary: #6c4ad0;
+      --primary-dark: #5238a8;
+      --text: #2b2540;
+      --muted: #7a7490;
+      --border: #ddd6f0;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #e9e2fb, #f9f4ff);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 32px 16px;
+    }
+    .container {
+      max-width: 680px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 18px;
+      padding: 36px 32px;
+      box-shadow: 0 10px 40px rgba(80, 50, 160, 0.15);
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+      color: var(--primary);
+      text-align: center;
+    }
+    .subtitulo {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+    fieldset {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 0 0 20px;
+      padding: 16px 18px;
+    }
+    legend {
+      font-weight: 600;
+      padding: 0 8px;
+      color: var(--primary-dark);
+    }
+    label.opcao {
+      display: block;
+      padding: 8px 10px;
+      margin: 4px 0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    label.opcao:hover { background: #f1ecfc; }
+    input[type="radio"] { margin-right: 8px; accent-color: var(--primary); }
+
+    .dados label {
+      display: block;
+      font-weight: 600;
+      margin: 12px 0 4px;
+    }
+    .dados input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+    }
+    .dados input:focus {
+      outline: 2px solid var(--primary);
+      border-color: transparent;
+    }
+
+    /* Consentimento de baixa visibilidade (dark pattern simulado) */
+    .termos {
+      margin-top: 22px;
+      font-size: 8px;
+      line-height: 1.3;
+      color: #c9c5d6;          /* contraste muito baixo sobre fundo branco */
+      text-align: justify;
+    }
+    .termos input[type="checkbox"] {
+      width: 8px;
+      height: 8px;
+      vertical-align: middle;
+      margin-right: 3px;
+    }
+    .termos label { cursor: default; }
+
+    button.enviar {
+      display: block;
+      width: 100%;
+      margin-top: 24px;
+      padding: 14px;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+      background: var(--primary);
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+    }
+    button.enviar:hover { background: var(--primary-dark); }
+    button.enviar:active { transform: scale(0.98); }
+
+    .erro {
+      color: #c0392b;
+      font-size: 0.9rem;
+      margin-top: 10px;
+      min-height: 1.2em;
+      text-align: center;
+    }
+
+    #resultado {
+      display: none;
+      margin-top: 28px;
+      padding: 24px;
+      border-radius: 14px;
+      background: #f1ecfc;
+      border-left: 6px solid var(--primary);
+    }
+    #resultado h2 { margin-top: 0; color: var(--primary-dark); }
+    #resultado .aviso-academico {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Descubra o seu Perfil Psicológico</h1>
+    <p class="subtitulo">Responda a 5 perguntas rápidas e conheça o seu perfil dominante.</p>
+
+    <form id="teste" novalidate>
+
+      <!-- Dados pessoais -->
+      <fieldset class="dados">
+        <legend>Os seus dados</legend>
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" name="nome" placeholder="O seu nome" required>
+
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="exemplo@email.com" required>
+
+        <label for="nascimento">Data de nascimento</label>
+        <input type="date" id="nascimento" name="nascimento" required>
+      </fieldset>
+
+      <!-- Perguntas -->
+      <fieldset>
+        <legend>1. Num fim de semana livre, prefere:</legend>
+        <label class="opcao"><input type="radio" name="p1" value="A"> Sair com amigos e conhecer pessoas novas</label>
+        <label class="opcao"><input type="radio" name="p1" value="B"> Ficar em casa a ler ou a ver séries</label>
+        <label class="opcao"><input type="radio" name="p1" value="C"> Dedicar-se a um projeto pessoal criativo</label>
+        <label class="opcao"><input type="radio" name="p1" value="D"> Planear a semana seguinte com antecedência</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. Perante um problema inesperado, a sua reação é:</legend>
+        <label class="opcao"><input type="radio" name="p2" value="A"> Pedir a opinião de outras pessoas</label>
+        <label class="opcao"><input type="radio" name="p2" value="B"> Refletir sozinho(a) antes de agir</label>
+        <label class="opcao"><input type="radio" name="p2" value="C"> Improvisar uma solução original</label>
+        <label class="opcao"><input type="radio" name="p2" value="D"> Seguir um método estruturado</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. Num trabalho de grupo, costuma ser quem:</legend>
+        <label class="opcao"><input type="radio" name="p3" value="A"> Motiva e anima a equipa</label>
+        <label class="opcao"><input type="radio" name="p3" value="B"> Ouve com atenção e media conflitos</label>
+        <label class="opcao"><input type="radio" name="p3" value="C"> Propõe as ideias mais inovadoras</label>
+        <label class="opcao"><input type="radio" name="p3" value="D"> Organiza tarefas e prazos</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>4. Qual destas frases o descreve melhor?</legend>
+        <label class="opcao"><input type="radio" name="p4" value="A"> Gosto de estar rodeado(a) de energia e movimento</label>
+        <label class="opcao"><input type="radio" name="p4" value="B"> Valorizo a calma e o tempo para pensar</label>
+        <label class="opcao"><input type="radio" name="p4" value="C"> Sinto-me vivo(a) quando crio algo novo</label>
+        <label class="opcao"><input type="radio" name="p4" value="D"> Gosto de ter tudo sob controlo</label>
+      </fieldset>
+
+      <fieldset>
+        <legend>5. Como lida com mudanças na sua rotina?</legend>
+        <label class="opcao"><input type="radio" name="p5" value="A"> Adoro, é uma oportunidade social</label>
+        <label class="opcao"><input type="radio" name="p5" value="B"> Preciso de algum tempo para me adaptar</label>
+        <label class="opcao"><input type="radio" name="p5" value="C"> Vejo-as como inspiração</label>
+        <label class="opcao"><input type="radio" name="p5" value="D"> Prefiro minimizá-las e manter a ordem</label>
+      </fieldset>
+
+      <!-- Consentimento velado: fonte 8px, baixo contraste, caixa pré-selecionada -->
+      <div class="termos">
+        <label>
+          <input type="checkbox" id="consentimento" name="consentimento" checked>
+          Ao prosseguir, o utilizador declara ter lido e aceitar integralmente os Termos de Uso e a Política de Privacidade,
+          autorizando, de forma ampla, irrevogável e por prazo indeterminado, a recolha, o armazenamento, o tratamento,
+          o cruzamento e a partilha dos seus dados pessoais (incluindo nome, e-mail, data de nascimento, respostas ao teste
+          e dados de navegação e dispositivo) com parceiros comerciais, anunciantes e demais terceiros, para fins de
+          funcionamento do teste, criação de perfis comportamentais, publicidade personalizada, estudos de mercado e outras
+          finalidades que a entidade responsável venha a considerar relevantes. A utilização do serviço implica a
+          aceitação de eventuais alterações futuras a estes termos, sem necessidade de aviso prévio.
+        </label>
+      </div>
+
+      <button type="submit" class="enviar">Ver Resultado</button>
+      <p class="erro" id="erro" role="alert"></p>
+    </form>
+
+    <!-- Resultado -->
+    <section id="resultado" aria-live="polite">
+      <h2 id="res-titulo"></h2>
+      <p id="res-texto"></p>
+      <p class="aviso-academico">
+        Nota: esta página é uma simulação académica sobre padrões de interface (dark patterns).
+        Nenhum dado foi enviado, guardado ou partilhado — tudo é processado localmente no seu navegador.
+      </p>
+    </section>
+  </main>
+
+  <script>
+    const perfis = {
+      A: {
+        titulo: "Perfil Sociável",
+        texto: "Ganha energia no contacto com os outros. É comunicativo(a), entusiasta e tem facilidade em criar laços e motivar quem o(a) rodeia."
+      },
+      B: {
+        titulo: "Perfil Reflexivo",
+        texto: "Valoriza a calma, a introspeção e a análise cuidadosa. É um(a) ótimo(a) ouvinte e toma decisões ponderadas."
+      },
+      C: {
+        titulo: "Perfil Criativo",
+        texto: "A sua mente procura constantemente novas ideias e soluções originais. Inspira-se na mudança e gosta de fazer as coisas de forma diferente."
+      },
+      D: {
+        titulo: "Perfil Organizado",
+        texto: "Preza a estrutura, o planeamento e a eficiência. É fiável, metódico(a) e raramente deixa algo ao acaso."
+      }
+    };
+
+    document.getElementById("teste").addEventListener("submit", function (e) {
+      e.preventDefault();
+      const erro = document.getElementById("erro");
+      erro.textContent = "";
+
+      const nome = document.getElementById("nome").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const nascimento = document.getElementById("nascimento").value;
+
+      if (!nome || !email || !nascimento) {
+        erro.textContent = "Por favor, preencha o nome, o e-mail e a data de nascimento.";
+        return;
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        erro.textContent = "Introduza um endereço de e-mail válido.";
+        return;
+      }
+
+      const contagem = { A: 0, B: 0, C: 0, D: 0 };
+      for (let i = 1; i <= 5; i++) {
+        const sel = document.querySelector('input[name="p' + i + '"]:checked');
+        if (!sel) {
+          erro.textContent = "Responda a todas as perguntas (falta a pergunta " + i + ").";
+          return;
+        }
+        contagem[sel.value]++;
+      }
+
+      if (!document.getElementById("consentimento").checked) {
+        erro.textContent = "Para ver o resultado, é necessário aceitar os Termos de Uso e a Política de Privacidade.";
+        return;
+      }
+
+      const dominante = Object.keys(contagem).reduce((a, b) => contagem[a] >= contagem[b] ? a : b);
+      const perfil = perfis[dominante];
+
+      document.getElementById("res-titulo").textContent = nome + ", o seu perfil é: " + perfil.titulo;
+      document.getElementById("res-texto").textContent = perfil.texto;
+      const res = document.getElementById("resultado");
+      res.style.display = "block";
+      res.scrollIntoView({ behavior: "smooth" });
+    });
+  </script>
+</body>
+</html>
